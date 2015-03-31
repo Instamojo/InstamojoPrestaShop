@@ -9,7 +9,7 @@ $api_key = Configuration::get('INSTAMOJO_API_KEY');
 $auth_token = Configuration::get('INSTAMOJO_AUTH_TOKEN');
 $custom_field = Configuration::get('INSTAMOJO_CUSTOM_FIELD');
 
-$api = new InstamojoAPI($api_key, $auth_token, 'https://www.instamojo.com:5000/api/1.1/');
+$api = new InstamojoAPI($api_key, $auth_token, 'https://www.instamojo.com/api/1.1/');
 
 $success = true;
 
