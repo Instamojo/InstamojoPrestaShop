@@ -7,27 +7,27 @@ This module allows us to use [Instamojo](https://www.instamojo.com) as Payment G
 ---
 - Download the [zip file](https://github.com/ashwch/Instamojo-PrestaShop/archive/master.zip) and unpack its files into a folder named **instamojo** into the modules folder of your PrestaShop installation. You will have to create the folder **instamojo** if not present already. So, after extraction `modules/instamojo` will looks like: 
 
-```
-$ tree instamojo/
-instamojo/
-├── config.xml
-├── instamojo-api.php
-├── instamojo.php
-├── js
-│   └── jquery.js
-├── logo.png
-├── readme.md
-├── validation.php
-└── views
-    └── templates
-        ├── admin
-        └── front
-            └── instamojo.tpl
-
-5 directories, 8 files
-```
-
-**Note that** it shouldn't be `/modules/instamojo/Instamojo-PrestaShop/instamojo.php`. but ` /modules/instamojo/instamojo.php`. 
+    ```
+    $ tree instamojo/
+    instamojo/
+    ├── config.xml
+    ├── instamojo-api.php
+    ├── instamojo.php
+    ├── js
+    │   └── jquery.js
+    ├── logo.png
+    ├── readme.md
+    ├── validation.php
+    └── views
+        └── templates
+            ├── admin
+            └── front
+                └── instamojo.tpl
+    
+    5 directories, 8 files
+    ```
+    
+      **Note that** it shouldn't be `/modules/instamojo/Instamojo-PrestaShop/instamojo.php`. but ` /modules/instamojo/instamojo.php`. 
 
 - Now go the admin backend and look for "instamojo" in modules, there click on install and that will install the plugin.
 
