@@ -49,7 +49,7 @@ public function uninstall()
     !Configuration::deleteByName('INSTAMOJO_API_KEY') ||
     !Configuration::deleteByName('INSTAMOJO_AUTH_TOKEN') ||
     !Configuration::deleteByName('INSTAMOJO_PRIVATE_SALT') ||
-    !Configuration::deleteByName('INSTAMOJO_PAYMENT_BUTTON_ACTUAL_HTML') ||
+    !Configuration::deleteByName('INSTAMOJO_PAYMENT_BUTTON_HTML') ||
     !Configuration::deleteByName('INSTAMOJO_CUSTOM_FIELD')
   )
     return false;
@@ -265,9 +265,9 @@ public function hookdisplayPayment($params) {
         } else {
             $redirect_url = 'http://' . htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8') . __PS_BASE_URI__ . 'modules/instamojo/validation.php';
         }
-        $imname = $address->firstname . ' ' . $address->lastname;
-        $imemail = $email_address;
-        $imphone = ltrim($address->phone_mobile, '+');
+        $imname = substr(trim($address->firstname . ' ' . $address->lastname), 0, 20);
+        $imemail = substr($email_address, 0, 75);
+        $imphone = substr(ltrim($address->phone_mobile, '+'), 0, 20);
         $imamount = $amount;
         $imtid = $cartId . '-' . date('his');
 
@@ -276,6 +276,7 @@ public function hookdisplayPayment($params) {
         $private_salt = Configuration::get('INSTAMOJO_PRIVATE_SALT');
         $payment_button_html = base64_decode(Configuration::get('INSTAMOJO_PAYMENT_BUTTON_ACTUAL_HTML'));
         $custom_field = Configuration::get('INSTAMOJO_CUSTOM_FIELD');
+        
         $data = Array();
         $data['data_name'] = $imname;
         $data['data_email'] = $imemail;
