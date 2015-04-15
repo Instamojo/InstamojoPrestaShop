@@ -283,7 +283,17 @@ public function hookdisplayPayment($params) {
         $data['data_amount'] = $imamount;
         $data['data_phone'] = $imphone;
         $data["data_" . $custom_field] = $imtid;
-        ksort($data, SORT_STRING | SORT_FLAG_CASE);
+
+        $ver = explode('.', phpversion());
+        $major = (int) $ver[0];
+        $minor = (int) $ver[1];
+        if($major >= 5 and $minor >= 4){
+            ksort($data, SORT_STRING | SORT_FLAG_CASE);
+        }
+        else{
+            uksort($data, 'strcasecmp');
+        }
+         
         $str = hash_hmac("sha1", implode("|", $data), $private_salt);
         
         $payment_button_html = sprintf($payment_button_html, $custom_field, $custom_field, $custom_field, $imtid, $imname, $imemail, $imamount, $imphone, $str);
