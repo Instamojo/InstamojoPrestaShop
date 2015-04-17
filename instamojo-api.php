@@ -1,5 +1,6 @@
 <?php
 
+
 class InstamojoAPI {
     const version = '1.1';
 
@@ -60,6 +61,10 @@ class InstamojoAPI {
     */
     private function api_call($method, $path, array $data=null) 
     {
+
+        $logger = new FileLogger(0); //0 == debug level, logDebug() won’t work without this.
+        $logger->setFilename(_PS_ROOT_DIR_ . "/log/imojo.log");
+
         $path = (string) $path;
         $method = (string) $method;
         $data = (array) $data;
@@ -95,13 +100,21 @@ class InstamojoAPI {
 
         $error_number = curl_errno($this->curl);
         $error_message = curl_error($this->curl);
+        $logger->logDebug("Curl error no: $error_number || Curl error message: $error_message");
         $response_obj = json_decode($response, true);
 
         if($response_obj['success'] == false) {
             $message = json_encode($response_obj['message']);
-            throw new Exception($message . PHP_EOL);
+            $logger->logDebug("Payment for this ID was not successfull: $message");
         }
-        return $response_obj;
+
+        if(empty($response_obj) || is_null($response_obj)){
+            return Array('payement' => Array('status' => 'Failed'));
+        }
+        else{
+            return $response_obj;
+        }
+        
     }
 
     /**
