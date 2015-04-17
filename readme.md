@@ -43,7 +43,7 @@ In this section we will learn how to create a Payment link along with how to get
 
  Now click on **Get started** to save the button.
  
-- Now copy the Payment Link URL and paste this in **Payment Link** field. URL's format is usually: **https://www.instamojo.com/<username>/<slug>/**
+- Now copy the Payment Link URL and paste this in **Payment Link** field. URL's format is usually: **https://www.instamojo.com/username/slug/**.
 - Now on the Payment Link page go to **More options** and click on **Custom Fields**
  Create a custom field called **Order ID** and mark it as **required**. In the custom field creation page, hover over the field you just created. You'll see a field with the format **Field_**. Note down the full name (including the **Field_** bit. Note that this is case sensitive!). Enter this name in the **Custom field** field of the Instamojo module configuration page in PrestaShop.
 
