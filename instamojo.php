@@ -2,7 +2,6 @@
 if (!defined('_PS_VERSION_'))
     exit;
 
-
 class Instamojo extends PaymentModule {
 
 public function __construct()
@@ -49,7 +48,7 @@ public function uninstall()
     !Configuration::deleteByName('INSTAMOJO_API_KEY') ||
     !Configuration::deleteByName('INSTAMOJO_AUTH_TOKEN') ||
     !Configuration::deleteByName('INSTAMOJO_PRIVATE_SALT') ||
-    !Configuration::deleteByName('INSTAMOJO_PAYMENT_BUTTON_HTML') ||
+    !Configuration::deleteByName('INSTAMOJO_PAYMENT_LINK') ||
     !Configuration::deleteByName('INSTAMOJO_CUSTOM_FIELD')
   )
     return false;
@@ -60,17 +59,28 @@ public function uninstall()
 public function getContent()
 {
     $output = null;
-    $all_fine = 1;
+    $all_fine = 0;
  
     if (Tools::isSubmit('submit'.$this->name))
     {
+        
+        $checkout_label = strval(Tools::getValue('INSTAMOJO_CHECKOUT_BUTTON_LABEL'));
         $api_key = strval(Tools::getValue('INSTAMOJO_API_KEY'));
         $auth_token = strval(Tools::getValue('INSTAMOJO_AUTH_TOKEN'));
         $private_salt = strval(Tools::getValue('INSTAMOJO_PRIVATE_SALT'));
-        $payment_button_html = strval(Tools::getValue('INSTAMOJO_PAYMENT_BUTTON_HTML'));
+        $payment_link = strval(Tools::getValue('INSTAMOJO_PAYMENT_LINK'));
         $custom_field = strval(Tools::getValue('INSTAMOJO_CUSTOM_FIELD'));
 
 
+        if (!$checkout_label
+          || empty($checkout_label)){
+            Configuration::updateValue('INSTAMOJO_CHECKOUT_BUTTON_LABEL', "Pay using Instamojo");
+            $output .= $this->displayError($this->l('Invalid Configuration value for  Checkout button label. Default value of "Pay using Instamojo" is going to be used.'));
+            
+        }else{
+            $all_fine += 1;
+            Configuration::updateValue('INSTAMOJO_CHECKOUT_BUTTON_LABEL', $checkout_label);
+        }
         if (!$api_key
           || empty($api_key)){
             $output .= $this->displayError($this->l('Invalid Configuration value for API key.'));
@@ -103,36 +113,19 @@ public function getContent()
             $all_fine += 1;
             Configuration::updateValue('INSTAMOJO_CUSTOM_FIELD', $custom_field);
         }
-        if (!$payment_button_html
-          || empty($payment_button_html)){
-            $output .= $this->displayError($this->l('Invalid Configuration value for Payment button HTML.'));
+        if (!$payment_link
+          || empty($payment_link)){
+            $output .= $this->displayError($this->l('Invalid Configuration value for Payment Link.'));
         }
         else{
-            $doc = new DOMDocument();
-            $doc->loadHTML($payment_button_html);
-            $nodes = $doc->getElementsByTagName('a');
-            foreach($nodes as $node){
-                $payment_link = $node->getAttribute('href');
-                break;
-            }
- 
-            $link = $payment_link . "?embed=form&";
-            $link .= "data_readonly=data_name&data_readonly=data_email&data_readonly=data_amount&data_readonly=data_phone&data_readonly=data_%s"; // readonly fields
-            $link .= "&data_hidden=data_%s&data_%s=%s"; // hidden + their values
-            $link .= "&data_name=%s&data_email=%s&data_amount=%s&data_phone=%s&data_sign=%s"; // readonly field values
-            $node->setAttribute('href', $link);
-            $html = $doc->saveHTML();
-            $output = Array(); 
-            preg_match("/<html><body>(.*?)<\/body><\/html>/", $html, $output);
-            Configuration::updateValue('INSTAMOJO_PAYMENT_BUTTON_HTML', base64_encode(html_entity_decode($payment_button_html)));
-            Configuration::updateValue('INSTAMOJO_PAYMENT_BUTTON_ACTUAL_HTML', html_entity_decode(base64_encode($output[1])));
+            Configuration::updateValue('INSTAMOJO_PAYMENT_LINK', base64_encode(html_entity_decode($payment_link)));
             $all_fine += 1;
         }
-        if($all_fine === 5)
+        if($all_fine === 6)
         {
             $output .= $this->displayConfirmation($this->l('All settings changed successfully.'));
         }
-        else if($all_fine > 0 && $all_fine !== 4){
+        else if($all_fine > 0 && $all_fine !== 6){
             $output .= $this->displayConfirmation($this->l('Some settings changed successfully.'));
         }
     }
@@ -151,6 +144,13 @@ public function displayForm()
             'title' => $this->l('Settings'),
         ),
         'input' => array(
+            array(
+                'type' => 'text',
+                'label' => $this->l('Checkout button label'),
+                'name' => 'INSTAMOJO_CHECKOUT_BUTTON_LABEL',
+                'size' => 32,
+                'required' => false
+            ),
             array(
                 'type' => 'text',
                 'label' => $this->l('API Key'),
@@ -174,8 +174,8 @@ public function displayForm()
             ),
             array(
                 'type' => 'text',
-                'label' => $this->l('Payment button HTML'),
-                'name' => 'INSTAMOJO_PAYMENT_BUTTON_HTML',
+                'label' => $this->l('Payment Link'),
+                'name' => 'INSTAMOJO_PAYMENT_LINK',
                 'required' => true
             ),
             array(
@@ -220,11 +220,12 @@ public function displayForm()
             'desc' => $this->l('Back to list')
         )
     );
-     
+
+    $helper->fields_value['INSTAMOJO_CHECKOUT_BUTTON_LABEL'] = Configuration::get('INSTAMOJO_CHECKOUT_BUTTON_LABEL'); 
     $helper->fields_value['INSTAMOJO_API_KEY'] = Configuration::get('INSTAMOJO_API_KEY');
     $helper->fields_value['INSTAMOJO_AUTH_TOKEN'] = Configuration::get('INSTAMOJO_AUTH_TOKEN');
     $helper->fields_value['INSTAMOJO_PRIVATE_SALT'] = Configuration::get('INSTAMOJO_PRIVATE_SALT');
-    $helper->fields_value['INSTAMOJO_PAYMENT_BUTTON_HTML'] = base64_decode(Configuration::get('INSTAMOJO_PAYMENT_BUTTON_HTML'));
+    $helper->fields_value['INSTAMOJO_PAYMENT_LINK'] = base64_decode(Configuration::get('INSTAMOJO_PAYMENT_LINK'));
     $helper->fields_value['INSTAMOJO_CUSTOM_FIELD'] = Configuration::get('INSTAMOJO_CUSTOM_FIELD');
 
     return $helper->generateForm($fields_form);
@@ -232,10 +233,16 @@ public function displayForm()
 
 
 public function hookdisplayPayment($params) {
-        
+
+        $logger = new FileLogger(0); //0 == debug level, logDebug() won’t work without this.
+        $logger->setFilename(_PS_ROOT_DIR_ . "/log/imojo.log");
+
         if (!$this->active)
             return;
         //!$cart->OrderExists();
+
+        $logger->logDebug("Hook Display Payment starts.");
+
         $customer = new Customer($params['cart']->id_customer);
         $email_address = $customer->email;
         $currency = trim($this->getCurrency()->iso_code);
@@ -257,6 +264,7 @@ public function hookdisplayPayment($params) {
         $product_name = (Tools::strlen($product_name) > 100) ? Tools::substr($product_name, 0, 100) : $product_name;
         $complete_address = $address->address1 . ' ' . $address->address2;
         $complete_address = (Tools::strlen($complete_address) > 100) ? Tools::substr($complete_address, 0, 100) : $complete_address;
+        $logger->logDebug("$email_address | $currency | $amount | $cartId | $product_count | $product_name");
         // $module_version = (Tools::strlen($module_version) > 20) ? Tools::substr($module_version, 0, 20) : $module_version;
 
         if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' && $_SERVER['HTTPS'] != 'OFF') {
@@ -271,11 +279,22 @@ public function hookdisplayPayment($params) {
         $imamount = $amount;
         $imtid = $cartId . '-' . date('his');
 
+        $logger->logDebug("$imname | $imemail | $imphone | $imamount | $imtid");
+        
+        $checkout_label = Configuration::get('INSTAMOJO_CHECKOUT_BUTTON_LABEL');
+        $checkout_label = $checkout_label ? $checkout_label : "Pay using Instamojo";
         $api_key = Configuration::get('INSTAMOJO_API_KEY');
         $auth_token = Configuration::get('INSTAMOJO_AUTH_TOKEN');
         $private_salt = Configuration::get('INSTAMOJO_PRIVATE_SALT');
-        $payment_button_html = base64_decode(Configuration::get('INSTAMOJO_PAYMENT_BUTTON_ACTUAL_HTML'));
+        $payment_link = base64_decode(Configuration::get('INSTAMOJO_PAYMENT_LINK'));
         $custom_field = Configuration::get('INSTAMOJO_CUSTOM_FIELD');
+
+        $payment_link = $payment_link . "?embed=form&";
+        $payment_link .= "data_readonly=data_name&data_readonly=data_email&data_readonly=data_amount&data_readonly=data_phone&data_readonly=data_%s"; // readonly fields
+        $payment_link .= "&data_hidden=data_%s&data_%s=%s"; // hidden + their values
+        $payment_link .= "&data_name=%s&data_email=%s&data_amount=%s&data_phone=%s&data_sign=%s"; // readonly field values
+
+        $logger->logDebug("$checkout_label | $api_key | $auth_token | $private_salt | $payment_link | $custom_field");
         
         $data = Array();
         $data['data_name'] = $imname;
@@ -283,11 +302,25 @@ public function hookdisplayPayment($params) {
         $data['data_amount'] = $imamount;
         $data['data_phone'] = $imphone;
         $data["data_" . $custom_field] = $imtid;
-        ksort($data, SORT_STRING | SORT_FLAG_CASE);
+
+        $ver = explode('.', phpversion());
+        $major = (int) $ver[0];
+        $minor = (int) $ver[1];
+        if($major >= 5 and $minor >= 4){
+            ksort($data, SORT_STRING | SORT_FLAG_CASE);
+        }
+        else{
+            uksort($data, 'strcasecmp');
+        }
+
         $str = hash_hmac("sha1", implode("|", $data), $private_salt);
-        
-        $payment_button_html = sprintf($payment_button_html, $custom_field, $custom_field, $custom_field, $imtid, $imname, $imemail, $imamount, $imphone, $str);
-        $this->smarty->assign('payment_button_html', $payment_button_html);
+
+        $logger->logDebug("Signature is: $str");  
+
+        $payment_link = sprintf($payment_link, $custom_field, $custom_field, $custom_field, $imtid, $imname, $imemail, $imamount, $imphone, $str);
+        $logger->logDebug("Payment link is: $payment_link");
+        $this->smarty->assign('payment_link', $payment_link);
+        $this->smarty->assign('checkout_label', $checkout_label);
 
         return $this->display(__FILE__, '/views/templates/front/instamojo.tpl');
     }
