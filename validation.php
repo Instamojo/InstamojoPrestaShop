@@ -42,10 +42,13 @@ catch (Exception $e){
 
 try{
     if($success === true) {
-    $instamojo->validateOrder($cart_id, _PS_OS_PAYMENT_, $total, $instamojo->displayName, $response, $cart_id, null, false, null, null);
+        $cart = new Cart($cart_id); 
+        $customer = new Customer((int)$cart->id_customer); 
+        $extra_vars = array('transaction_id' => $response['payment_id']);
+        $instamojo->validateOrder((int)$cart->id, _PS_OS_PAYMENT_, $total, $instamojo->displayName, NULL, $extra_vars, NULL, false, $customer->secure_key, NULL);
     }
     else {
-    $instamojo->validateOrder($cart_id, _PS_OS_ERROR_, $total, $instamojo->displayName, array(), $cart_id, null, false, null, null);
+    $instamojo->validateOrder($cart_id, _PS_OS_ERROR_, $total, $instamojo->displayName, NULL, array(), NULL, false, NULL);
     }
 }
 catch(Exception $e){
