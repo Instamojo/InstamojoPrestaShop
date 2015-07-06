@@ -13,7 +13,7 @@ public function __construct()
     $this->need_instance = 0;
     $this->currencies = true;
     $this->currencies_mode = 'radio';
-    // $this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
+    $this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
     $this->bootstrap = true;
  
     parent::__construct();
