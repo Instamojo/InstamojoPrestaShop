@@ -329,7 +329,8 @@ public function hookdisplayPayment($params) {
 public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown', $response_message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null) {
         if (!$this->active)
             return;
-        parent::validateOrder((int) $id_cart, (int) $id_order_state, (float) $amount_paid, $payment_method, $response_message, $extra_vars, $currency_special, true, false, null);
+
+        parent::validateOrder((int) $id_cart, (int) $id_order_state, (float) $amount_paid, $payment_method, $response_message, $extra_vars, $currency_special, $dont_touch_amount, $secure_key, $shop);
     }
 
 }
