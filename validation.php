@@ -14,8 +14,14 @@ $custom_field = Configuration::get('INSTAMOJO_CUSTOM_FIELD');
 $logger->logDebug("API: $api_key| AUTH: $auth_token");
 $api = new InstamojoAPI($api_key, $auth_token, 'https://www.instamojo.com/api/1.1/');
 
-$success = true;
 $total = 0;
+
+define("STATUS_CREDIT", 1);
+define("STATUS_FAILED", 2);
+define("STATUS_INITIATED", 3);
+define("STATUS_NOT_FOUND", 4);
+
+$status = STATUS_CREDIT;
 
 try{
     $payment_id = $_GET["payment_id"];
@@ -23,16 +29,26 @@ try{
     $response = $api->paymentDetail($payment_id);
     $logger->logDebug("Repsonse from Instamojo is: " . print_r($response, true));
     $logger->logDebug("Website's base url is " . _PS_BASE_URL_.__PS_BASE_URI__);
-    if($response['status'] == "Credit"){
-        $logger->logDebug("Status is 'Credit' for payment with id $payment_id");
+
+    if($response['status'] == "Credit" or $response['status'] == "Failed" or $response['status'] == "Initiated"){
+        $logger->logDebug("Status is " . $response['status'] . " for payment with id $payment_id");
         $cart_info = explode('-', $response['custom_fields'][$custom_field]['value']);
         $cart_id = $cart_info[0];
         $total = (float) $response["amount"];
+        if($response['status'] == "Credit"){
+            $status = STATUS_CREDIT;
+        }
+        else if($response['status'] == "Failed"){
+            $status = STATUS_FAILED;
+        }
+        else if($response['status'] == "Initiated"){
+            $status = STATUS_INITIATED;
+        }
     }
     else{
-        // Dhoka diya re
-        $logger->logDebug("Status is not credit for payment with id $payment_id");
-        $success = false;
+        // Server returned Null for this payment id
+        $logger->logDebug("Null response for payment with id $payment_id");
+        $status = STATUS_NOT_FOUND;
     }
 }
 catch (Exception $e){
@@ -41,13 +57,25 @@ catch (Exception $e){
 }
 
 try{
-    if($success === true) {
+    if($status === STATUS_CREDIT or $status === STATUS_FAILED or $status === STATUS_INITIATED) {
         $cart = new Cart($cart_id); 
         $customer = new Customer((int)$cart->id_customer); 
         $extra_vars = array('transaction_id' => $response['payment_id']);
-        $instamojo->validateOrder((int)$cart->id, _PS_OS_PAYMENT_, $total, $instamojo->displayName, NULL, $extra_vars, NULL, false, $customer->secure_key, NULL);
+
+        if($status === STATUS_CREDIT){
+            $extra_vars['reason'] = "Payment successful";            
+            $instamojo->validateOrder((int)$cart->id, _PS_OS_PAYMENT_, $total, $instamojo->displayName, NULL, $extra_vars, NULL, false, $customer->secure_key, NULL);
+        }
+        else if($status === STATUS_FAILED){
+            $extra_vars['reason'] = "Payment failed";
+            $instamojo->validateOrder((int)$cart->id, _PS_OS_ERROR_, $total, $instamojo->displayName, NULL, $extra_vars, NULL, false, $customer->secure_key, NULL);
+        }
+        else if($status === STATUS_INITIATED){
+            $extra_vars['reason'] = "User initiated the payment but never completed";
+            $instamojo->validateOrder((int)$cart->id, _PS_OS_CANCELED_, $total, $instamojo->displayName, NULL, $extra_vars, NULL, false, $customer->secure_key, NULL);
+        }
     }
-    else {
+    else if($status == STATUS_NOT_FOUND) {
     $instamojo->validateOrder($cart_id, _PS_OS_ERROR_, $total, $instamojo->displayName, NULL, array(), NULL, false, NULL);
     }
 }
