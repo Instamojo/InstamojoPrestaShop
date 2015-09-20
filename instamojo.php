@@ -273,9 +273,18 @@ public function hookdisplayPayment($params) {
         } else {
             $redirect_url = 'http://' . htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8') . __PS_BASE_URI__ . 'modules/instamojo/validation.php';
         }
+        $imphone = '';
+        $phone = $address->phone;
+        $phone_mobile = $address->phone_mobile;
+        if(!empty($phone_mobile)){
+            $imphone = $phone_mobile;
+        }
+        else{
+            $imphone = $phone;   
+        }
         $imname = substr(trim($address->firstname . ' ' . $address->lastname), 0, 20);
         $imemail = substr($email_address, 0, 75);
-        $imphone = substr(ltrim($address->phone_mobile, '+'), 0, 20);
+        $imphone = substr($imphone, 0, 20);
         $imamount = $amount;
         $imtid = $cartId . '-' . date('his');
 
@@ -315,7 +324,10 @@ public function hookdisplayPayment($params) {
 
         $str = hash_hmac("sha1", implode("|", $data), $private_salt);
 
-        $logger->logDebug("Signature is: $str");  
+        $logger->logDebug("Signature is: $str");
+        $imemail = urlencode($imemail);
+        $imname = urlencode($imname);
+        $imphone = urlencode($imphone);
 
         $payment_link = sprintf($payment_link, $custom_field, $custom_field, $custom_field, $imtid, $imname, $imemail, $imamount, $imphone, $str);
         $logger->logDebug("Payment link is: $payment_link");
