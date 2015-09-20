@@ -1,4 +1,4 @@
-Instamojo-PrestaShop v 0.0.2
+Instamojo-PrestaShop v 0.0.3
 ====
 ----
 This module allows us to use [Instamojo](https://www.instamojo.com) as Payment Gateway in PrestaShop websites.
@@ -63,6 +63,13 @@ This can be anything you want to display to the user on the checkout page, defau
 
 
 ----
+
+What's new in v 0.0.3
+----
+
+- Plugin will now support failed payments as well.
+- Name, phone and email are now urlencoded to handle special characters like `+` properly.
+- Now if mobile phone field is empty plugin will use the home phone field.
 
 What's new in v 0.0.2
 ----
