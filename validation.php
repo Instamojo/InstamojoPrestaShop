@@ -6,6 +6,7 @@ require_once(dirname(__FILE__) . '/instamojo-api.php');
 
 $logger = new FileLogger(0); //0 == debug level, logDebug() won’t work without this.
 $logger->setFilename(_PS_ROOT_DIR_ . "/log/imojo.log");
+$is_logged = Context::getContext()->customer->isLogged();
 
 $instamojo = new instamojo();
 $api_key = Configuration::get('INSTAMOJO_API_KEY');
@@ -79,16 +80,25 @@ try{
     $instamojo->validateOrder($cart_id, _PS_OS_ERROR_, $total, $instamojo->displayName, NULL, array(), NULL, false, NULL);
     }
 }
+
 catch(Exception $e){
     $logger->logDebug("Something went wrong while validating the order with PrestaShop: " . $e);
 }
+
 try{
     $result = Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'orders WHERE id_cart = ' . (int) $cart_id);
     $logger->logDebug("Data fetched from db successfully: " . print_r($result, true));
-    Tools::redirectLink(_PS_BASE_URL_.__PS_BASE_URI__ . 'index.php?controller=order-detail&id_order=' . $result['id_order']);
+
+    if($is_logged){
+        Tools::redirectLink(_PS_BASE_URL_.__PS_BASE_URI__ . 'index.php?controller=order-detail&id_order=' . $result['id_order']);
+    }
+    else{
+        $logger->logDebug("User is a guest user.");
+        Tools::redirectLink(_PS_BASE_URL_.__PS_BASE_URI__ . 'index.php?controller=guest-tracking' . '&id_order='. $result['reference'] . '&email='. urlencode($customer->email)); 
+    } 
 }
 catch(Exception $e){
-    $logger->logDebug("Something went wrong while querying for the order id : " . $e);
+    $logger->logDebug("Something went wrong while querying for the order id : " . $e->getMessage());
     Tools::redirectLink(_PS_BASE_URL_.__PS_BASE_URI__ . 'index.php?controller=history');
 }
 
