@@ -6,7 +6,7 @@ require_once(dirname(__FILE__) . '/instamojo-api.php');
 
 $logger = new FileLogger(0); //0 == debug level, logDebug() won’t work without this.
 $logger->setFilename(_PS_ROOT_DIR_ . "/log/imojo.log");
-$is_logged = Context::getContext()->customer->isLogged();
+$is_logged_in = Context::getContext()->customer->isLogged();
 
 $instamojo = new instamojo();
 $api_key = Configuration::get('INSTAMOJO_API_KEY');
@@ -89,7 +89,7 @@ try{
     $result = Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'orders WHERE id_cart = ' . (int) $cart_id);
     $logger->logDebug("Data fetched from db successfully: " . print_r($result, true));
 
-    if($is_logged){
+    if($is_logged_in){
         Tools::redirectLink(_PS_BASE_URL_.__PS_BASE_URI__ . 'index.php?controller=order-detail&id_order=' . $result['id_order']);
     }
     else{
