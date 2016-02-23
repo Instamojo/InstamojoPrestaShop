@@ -5,7 +5,7 @@ This module allows us to use [Instamojo](https://www.instamojo.com) as Payment G
 
 ###Installation
 ---
-- Download the [zip file](https://github.com/ashwch/Instamojo-PrestaShop/archive/master.zip) and unpack its files into a folder named **instamojo** into the modules folder of your PrestaShop installation. You will have to create the folder **instamojo** if not present already. So, after extraction `modules/instamojo` will look like:
+- Download the [zip file](https://github.com/Instamojo/Instamojo-PrestaShop/archive/master.zip) and unpack its files into a folder named **instamojo** into the modules folder of your PrestaShop installation. You will have to create the folder **instamojo** if not present already. So, after extraction `modules/instamojo` will look like:
 
     ```
     $ tree instamojo/
