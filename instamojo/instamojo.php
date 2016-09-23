@@ -9,7 +9,7 @@ class Instamojo extends PaymentModule
 	{
 		$this->name = 'instamojo';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.0.0';
+		$this->version = '2.0.0';
 		$this->author = 'Instamojo';
 		$this->need_instance = 0;
 		$this->controllers = array('validation');

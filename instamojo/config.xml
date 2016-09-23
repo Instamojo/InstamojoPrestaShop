@@ -2,7 +2,7 @@
 <module>
 	<name>instamojo</name>
 	<displayName><![CDATA[Instamjo]]></displayName>
-	<version><![CDATA[1.0.0]]></version>
+	<version><![CDATA[2.0.0]]></version>
 	<description><![CDATA[Accept Online payments]]></description>
 	<author><![CDATA[Instamojo]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
