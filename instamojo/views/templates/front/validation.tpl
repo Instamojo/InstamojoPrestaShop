@@ -1,7 +1,7 @@
 
 
 {capture name=path}
-	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Go back to the Checkout' mod='instamojo'}">{l s='Checkout' mod='instamojo'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Pay using Instamojo' mod='instamojo'}
+	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'htmlall':'UTF-8'}" rel="nofollow" title="{l s='Go back to the Checkout' mod='instamojo'}">{l s='Checkout' mod='instamojo'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Pay using Instamojo' mod='instamojo'}
 {/capture}
 
 
@@ -17,7 +17,7 @@
  {/if}
 <P>Selected Payment Method : <b>{$checkout_label}</b></p>
 
-<form action="{$link->getModuleLink('instamojo', 'validation', [], true)|escape:'html'}" method="post">
+<form action="{$link->getModuleLink('instamojo', 'validation', [], true)|escape:'htmlall':'UTF-8'}" method="post">
 {if isset($showPhoneBox)}
 	<div style="padding:20px 0px;margin:20px 0;">
 		<label>Mobile No.</label>

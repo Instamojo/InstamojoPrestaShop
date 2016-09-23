@@ -43,8 +43,9 @@ class InstamojoValidationModuleFrontController extends ModuleFrontController
 			$logger->logDebug("Creating Instamojo order for  ".$this->context->cart->id);
 			
 			# prepare data
-			$api_data['name'] 			= substr(trim((html_entity_decode($customer->firstname . ' ' . $customer->lastname, ENT_QUOTES, 'UTF-8'))), 0, 20);
-			$api_data['email'] 			= substr($customer->email, 0, 75);
+			$api_data = Array();
+			$api_data['name'] 			= Tools::substr(trim((html_entity_decode($customer->firstname . ' ' . $customer->lastname, ENT_QUOTES, 'UTF-8'))), 0, 20);
+			$api_data['email'] 			= Tools::substr($customer->email, 0, 75);
 			$api_data['amount'] 		= $total;
 			$api_data['currency'] 		= "INR";
 			$api_data['redirect_url'] 	= $this->context->link->getModuleLink($this->module->name, 'confirm', array(), true);

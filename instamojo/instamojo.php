@@ -63,8 +63,7 @@ class Instamojo extends PaymentModule
 		if (!$this->active)
 			return ;
 		
-		global $smarty;
-		$smarty->assign(array(
+		$this->smarty->assign(array(
 			'this_path' => $this->_path, //keep for retro compat
 			'this_path_instamojo' => $this->_path,
 			'checkout_label' => $this->l((Configuration::get('checkout_label'))?Configuration::get('checkout_label'):"Pay using Instamojo"),
@@ -129,9 +128,10 @@ class Instamojo extends PaymentModule
 	public function getContent()
 	{
 		$output = null;
-		$order_states = OrderState::getOrderStates((int)$this->context->cookie->id_lang);
+		// $order_states = OrderState::getOrderStates((int)$this->context->cookie->id_lang);
 		if (Tools::isSubmit('submit'.$this->name))
 		{
+			$data = array(); 
 			$data['instamojo_client_id'] = strval(Tools::getValue('instamojo_client_id'));
 			$data['instamojo_client_secret'] = strval(Tools::getValue('instamojo_client_secret'));
 			$data['instamojo_testmode'] = strval(Tools::getValue('instamojo_testmode'));
@@ -155,6 +155,7 @@ class Instamojo extends PaymentModule
 		$default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 		 
 		// Init Fields form array
+		$fields_form =array();
 		$fields_form[0]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Settings'),

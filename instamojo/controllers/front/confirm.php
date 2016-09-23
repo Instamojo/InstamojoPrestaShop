@@ -42,6 +42,7 @@ class InstamojoConfirmModuleFrontController extends ModuleFrontController
 						Tools::redirectLink($this->context->link->getPageLink('order',true)."?step=1");
 					}
 					
+					$extra_vars = Array(); 
 					$extra_vars['transaction_id'] = $payment_id;
 					$customer = new Customer($this->context->cart->id_customer);
 					$total = $this->context->cart->getOrderTotal(true, Cart::BOTH);
