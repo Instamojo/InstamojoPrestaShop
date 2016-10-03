@@ -8,7 +8,7 @@ Download `InstamojoPrestaShop.zip` file from the [latest release](https://github
 
 **Note**: Don't download the files under **Downloads** section. They won't work.
 
-![Imgur](http://i.imgur.com/ZyUjlv5s.png)
+![Imgur](http://i.imgur.com/GWw6bU5.png)
 
 ## Installation
 
