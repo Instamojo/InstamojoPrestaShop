@@ -4,7 +4,11 @@ Tested on PrestaShop 1.5+
 
 ## Download:
 
-Download the latest release from the [releases section](https://github.com/Instamojo/InstamojoPrestashop/releases).
+Download `InstamojoPrestaShop.zip` file from the [latest release](https://github.com/Instamojo/InstamojoPrestaShop/releases/latest).
+
+**Note**: Don't download the files under **Downloads** section. They won't work.
+
+[!Imgur](http://i.imgur.com/ZyUjlv5.png)
 
 
 ## Installation
