@@ -1,5 +1,5 @@
 <?php
-class InstamojoValidationModuleFrontController extends ModuleFrontController
+class InstamojoPrestaShopvalidationModuleFrontController extends ModuleFrontController
 {
 	public $ssl = true;
 	private $template_data =array();
@@ -12,7 +12,7 @@ class InstamojoValidationModuleFrontController extends ModuleFrontController
 
 		$authorized = false;
 		foreach (Module::getPaymentModules() as $module)
-			if ($module['name'] == 'instamojo')
+			if ($module['name'] == 'InstamojoPrestaShop')
 			{
 				$authorized = true;
 				break;

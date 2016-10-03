@@ -2,12 +2,12 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class Instamojo extends PaymentModule
+class InstamojoPrestaShop extends PaymentModule
 {
 	private $error_messages;
 	public function __construct()
 	{
-		$this->name = 'instamojo';
+		$this->name = 'InstamojoPrestaShop';
 		$this->tab = 'payments_gateways';
 		$this->version = '2.0.0';
 		$this->author = 'Instamojo';
@@ -38,7 +38,7 @@ class Instamojo extends PaymentModule
 
 	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('payment') OR ! $this->registerHook('displayPaymentEU') OR !$this->registerHook('paymentReturn') or !Configuration::updateValue("instamojo"))
+		if (!parent::install() OR !$this->registerHook('payment') OR ! $this->registerHook('displayPaymentEU') OR !$this->registerHook('paymentReturn') or !Configuration::updateValue("InstamojoPrestaShop"))
 			return false;
 		# set Default Checkout Label.
 		Configuration::updateValue('instamojo_checkout_label',"Pay Using Instamojo");
@@ -49,7 +49,7 @@ class Instamojo extends PaymentModule
 	public function uninstall()
 	{
 		  if (!parent::uninstall() ||
-			!Configuration::deleteByName('instamojo') ||
+			!Configuration::deleteByName('InstamojoPrestaShop') ||
 			!Configuration::deleteByName('instamojo_client_id') ||
 			!Configuration::deleteByName('instamojo_client_secret') ||
 			!Configuration::deleteByName('instmaojo_testmode') ||

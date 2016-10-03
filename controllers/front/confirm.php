@@ -1,6 +1,6 @@
 <?php
 
-class InstamojoConfirmModuleFrontController extends ModuleFrontController
+class InstamojoPrestaShopconfirmModuleFrontController extends ModuleFrontController
 {
 	public function initContent()
 	{

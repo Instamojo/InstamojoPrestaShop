@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-	<name>instamojo</name>
+	<name>InstamojoPrestaShop</name>
 	<displayName><![CDATA[Instamjo]]></displayName>
 	<version><![CDATA[2.0.0]]></version>
 	<description><![CDATA[Accept Online payments]]></description>

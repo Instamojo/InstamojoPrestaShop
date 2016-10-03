@@ -1,7 +1,7 @@
 
 
 {capture name=path}
-	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'htmlall':'UTF-8'}" rel="nofollow" title="{l s='Go back to the Checkout' mod='instamojo'}">{l s='Checkout' mod='instamojo'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Pay using Instamojo' mod='instamojo'}
+	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'htmlall':'UTF-8'}" rel="nofollow" title="{l s='Go back to the Checkout' mod='InstamojoPrestaShop'}">{l s='Checkout' mod='InstamojoPrestaShop'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Pay using Instamojo' mod='InstamojoPrestaShop'}
 {/capture}
 
 
@@ -17,7 +17,7 @@
  {/if}
 <P>Selected Payment Method : <b>{$checkout_label}</b></p>
 
-<form action="{$link->getModuleLink('instamojo', 'validation', [], true)|escape:'htmlall':'UTF-8'}" method="post">
+<form action="{$link->getModuleLink('InstamojoPrestaShop', 'validation', [], true)|escape:'htmlall':'UTF-8'}" method="post">
 {if isset($showPhoneBox)}
 	<div style="padding:20px 0px;margin:20px 0;">
 		<label>Mobile No.</label>
@@ -30,8 +30,8 @@
 	<input type="hidden" name="confirm" value="1" />
 		
 	<p class="cart_navigation" id="cart_navigation">
-		<a href="{$link->getPageLink('order', true)}?step=3" class="button_large">{l s='Other payment methods' mod='instamojo'}</a>
-		<input type="submit" value="{l s='Confirm Order' mod='instamojo'}" class="exclusive_large" />
+		<a href="{$link->getPageLink('order', true)}?step=3" class="button_large">{l s='Other payment methods' mod='InstamojoPrestaShop'}</a>
+		<input type="submit" value="{l s='Confirm Order' mod='InstamojoPrestaShop'}" class="exclusive_large" />
 	</p>
 {/if}
 </form>
