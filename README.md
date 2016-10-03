@@ -32,7 +32,15 @@ Download the latest release from the [releases section](https://github.com/Insta
     
     - **Test Mode:** If enabled you can use our [Sandbox environment](https://test.instamojo.com) to test payments. Note that in this case you should use `Client Secret` and `Client ID` from the test account not production.
 
+## Migrating from older version(version < 2.0.0)
 
+If you were already using older version of our plugin then follow these steps:
 
-  
+1. Go to "Modules and Services" from Main menu.
+2. Now search for Instamojo in your plugins and click on "Unnstall" button corresponding to Instamojo module and then click on "Delete" to remove it.
+3. You might want to clear the cache by going to `Advanced Parameters` -> `Performance`.
+
+## Support
+
+For any issue send us an email to support@instamojo.com and share the `imojo.log` file. The location of `imojo.log` file is `log/imojo.log`.
  
