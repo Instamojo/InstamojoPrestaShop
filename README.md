@@ -21,7 +21,7 @@ Download `InstamojoPrestaShop.zip` file from the [latest release](https://github
 
 #### Manual Installation:
 
-1. Extract the zip file in your in `modules` directory of your PrestaShop instllation directory.
+1. Extract the zip file in your in `modules` directory in your PrestaShop installation directory.
 4. Now search for Instamojo in your plugins and click on "Install" button corresponding to Instamojo module.
 
 ## Configuration
@@ -31,7 +31,7 @@ Download `InstamojoPrestaShop.zip` file from the [latest release](https://github
 
     -  **Checkout Label:** This is the label users will see during checkout, its default value is "Pay using Instamojo". You can change it to something more generic like "Pay using Credit/Debit Card or Online Banking".
      
-    - **Client ID** and **Client Secret** - Client Secret And Client ID can be generated on the [Integrations page](https://www.instamojo.com/integrations/). Related support article: [How Do I Get My Client ID And Client Secret?](https://support.instamojo.com/hc/en-us/articles/212214265-How-do-I-get-my-Client-ID-and-Client-Secret-)
+    - **Client ID** and **Client Secret** - Client Secret and Client ID can be generated on the [Integrations page](https://www.instamojo.com/integrations/). Related support article: [How Do I Get My Client ID And Client Secret?](https://support.instamojo.com/hc/en-us/articles/212214265-How-do-I-get-my-Client-ID-and-Client-Secret-)
     
     - **Test Mode:** If enabled you can use our [Sandbox environment](https://test.instamojo.com) to test payments. Note that in this case you should use `Client Secret` and `Client ID` from the test account not production.
 
@@ -40,7 +40,7 @@ Download `InstamojoPrestaShop.zip` file from the [latest release](https://github
 If you were already using older version of our plugin then follow these steps:
 
 1. Go to "Modules and Services" from Main menu.
-2. Now search for Instamojo in your plugins and click on "Unnstall" button corresponding to Instamojo module and then click on "Delete" to remove it.
+2. Now search for Instamojo in your plugins and click on "Uninstall" button corresponding to Instamojo module and then click on "Delete" to remove it.
 3. You might want to clear the cache by going to `Advanced Parameters` -> `Performance`.
 
 ## Support
