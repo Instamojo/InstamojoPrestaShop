@@ -27,7 +27,9 @@ class InstamojoPrestaShopconfirmModuleFrontController extends ModuleFrontControl
 				$api = $this->module->getInstamojoObject($logger);
 				$response = $api->getOrderById($payment_request_id);
 				$logger->logDebug("Response from server for PaymentRequest ID $payment_request_id ".PHP_EOL .print_R($response,true));
-				$payment_status = $response->payments[0]->status;
+				$payment_status = $api->getPaymentStatus($payment_id, $response->payments);
+		        $logger->logDebug("Payment status for $payment_id is $payment_status");
+
 				if($payment_status == "successful" OR  $payment_status =="failed" )
 				{
 					$logger->logDebug("Response from server is $payment_status.");
