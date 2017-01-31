@@ -19,9 +19,14 @@ class Curl
 	
 	function __construct()
 	{
-		 $this->ch = curl_init();
-		 $this->cookie_file = dirname(__FILE__) . "/cookie.txt";
-		 $this->useragent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36";
+        if (!function_exists('curl_init')) {
+            throw new Exception('<b>Instamojo</b> '.
+                                '<a href="https://www.digitalocean.com/community/questions/curl-is-not-installed-in-your-php-installation">'.
+                                'plugin requires <b>cURL</b> to be installed first</a>');
+        }
+		$this->ch = curl_init();
+		$this->cookie_file = dirname(__FILE__) . "/cookie.txt";
+		$this->useragent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36";
 	}
 	
 	public function debug($bool)
