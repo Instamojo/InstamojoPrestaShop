@@ -10,16 +10,6 @@ class InstamojoPrestaShopvalidationModuleFrontController extends ModuleFrontCont
 		if ($this->context->cart->id_customer == 0 || $this->context->cart->id_address_delivery == 0 || $this->context->cart->id_address_invoice == 0 || !$this->module->active)
 			Tools::redirectLink(__PS_BASE_URI__.'order.php?step=1');
 
-		$authorized = false;
-		foreach (Module::getPaymentModules() as $module)
-			if ($module['name'] == 'InstamojoPrestaShop')
-			{
-				$authorized = true;
-				break;
-			}
-		if (!$authorized)
-			die(Tools::displayError('This payment method is not available.'));
-
 		$customer = new Customer($this->context->cart->id_customer);
 		if (!Validate::isLoadedObject($customer))
 			Tools::redirectLink(__PS_BASE_URI__.'order.php?step=1');
@@ -39,7 +29,12 @@ class InstamojoPrestaShopvalidationModuleFrontController extends ModuleFrontCont
 			
 			# prepare logger
 			$logger = new FileLogger(0); //0 == debug level, logDebug() won’t work without this.
-			$logger->setFilename(_PS_ROOT_DIR_ . "/log/imojo.log");
+			if (version_compare(_PS_VERSION_, '1.7', '<')){
+				$logger->setFilename(_PS_ROOT_DIR_ . "/log/imojo.log");
+			}
+			else{
+				$logger->setFilename(_PS_ROOT_DIR_ . "/app/logs/imojo.log");
+			}
 			$logger->logDebug("Creating Instamojo order for  ".$this->context->cart->id);
 			
 			# prepare data
