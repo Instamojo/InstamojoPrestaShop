@@ -6,7 +6,12 @@ class InstamojoPrestaShopconfirmModuleFrontController extends ModuleFrontControl
 	{
 		# prepare logger.
 		$logger = new FileLogger(0); //0 == debug level, logDebug() won’t work without this.
-		$logger->setFilename(_PS_ROOT_DIR_ . "/log/imojo.log");
+		if (version_compare(_PS_VERSION_, '1.7', '<')){
+			$logger->setFilename(_PS_ROOT_DIR_ . "/log/imojo.log");
+		}
+		else{
+			$logger->setFilename(_PS_ROOT_DIR_ . "/app/logs/imojo.log");
+		}
 		
 		$base_url = _PS_BASE_URL_.__PS_BASE_URI__;
 		

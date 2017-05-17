@@ -1,6 +1,6 @@
 # Instamojo Prestashop Payment Gateway Plugin
 
-Tested on PrestaShop 1.5+
+Tested on PrestaShop 1.5+ to 1.7.1.1
 
 ## Download:
 
@@ -45,5 +45,9 @@ If you were already using older version of our plugin then follow these steps:
 
 ## Support
 
-For any issue send us an email to support@instamojo.com and share the `imojo.log` file. The location of `imojo.log` file is `log/imojo.log`.
+For any issue send us an email to support@instamojo.com and share the `imojo.log` file. 
+
+The location of `imojo.log` file:
+  - 1.7+ -> `app/logs/imojo.log`
+  - <= 1.6 -> `log/imojo.log`
  

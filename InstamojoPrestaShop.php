@@ -38,24 +38,22 @@ class InstamojoPrestaShop extends PaymentModule
 
 	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('payment') OR ! $this->registerHook('displayPaymentEU') OR !$this->registerHook('paymentReturn') or !Configuration::updateValue("InstamojoPrestaShop"))
-			return false;
-		# set Default Checkout Label.
-		Configuration::updateValue('instamojo_checkout_label',"Pay Using Instamojo");
+		parent::install();
+		$this->registerHook('payment');
+		$this->registerHook('displayPaymentEU');
+		$this->registerHook('paymentReturn');
+		Configuration::updateValue('instamojo_checkout_label', 'Pay Using Instamojo');
 		return true;
 	}
 	
 	
 	public function uninstall()
 	{
-		  if (!parent::uninstall() ||
-			!Configuration::deleteByName('InstamojoPrestaShop') ||
-			!Configuration::deleteByName('instamojo_client_id') ||
-			!Configuration::deleteByName('instamojo_client_secret') ||
-			!Configuration::deleteByName('instmaojo_testmode') ||
-			!Configuration::deleteByName('instamojo_checkout_label')
-		)
-			return false;
+		  parent::uninstall();
+		  Configuration::deleteByName('instamojo_client_id');
+		  Configuration::deleteByName('instamojo_client_secret');
+		  Configuration::deleteByName('instmaojo_testmode');
+		  Configuration::deleteByName('instamojo_checkout_label');
 		return true;
 	}
 	public function hookPayment()
@@ -66,8 +64,8 @@ class InstamojoPrestaShop extends PaymentModule
 		$this->smarty->assign(array(
 			'this_path' => $this->_path, //keep for retro compat
 			'this_path_instamojo' => $this->_path,
-			'checkout_label' => $this->l((Configuration::get('checkout_label'))?Configuration::get('checkout_label'):"Pay using Instamojo"),
-			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
+			'checkout_label' => $this->l((Configuration::get('checkout_label')) ? Configuration::get('checkout_label'): "Pay using Instamojo"),
+			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/' . $this->name . '/'
 		));
 		
 		return $this->display(__FILE__, 'payment.tpl');
