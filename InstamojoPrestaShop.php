@@ -9,18 +9,19 @@ class InstamojoPrestaShop extends PaymentModule
 	{
 		$this->name = 'InstamojoPrestaShop';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.0.0';
+		$this->version = '2.0.3';
 		$this->author = 'Instamojo';
 		$this->need_instance = 0;
 		$this->controllers = array('validation');
 		$this->is_eu_compatible = 1;
 		$this->error_messages;
-		$this->currencies = false;
 		$this->bootstrap = true;
+		$this->currencies = true;
+		$this->currencies_mode = 'checkbox';
  
 		parent::__construct();
 
-		$this->displayName = $this->l('Instamjo');
+		$this->displayName = $this->l('Instamojo');
 		$this->description = $this->l('Accept Online payments');
 
 		/* For 1.4.3 and less compatibility */
