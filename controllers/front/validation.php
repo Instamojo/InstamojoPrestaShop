@@ -1,4 +1,9 @@
 <?php
+
+function is_not_17(){
+	return version_compare(_PS_VERSION_, '1.7', '<');
+}
+
 class InstamojoPrestaShopvalidationModuleFrontController extends ModuleFrontController
 {
 	public $ssl = true;
@@ -29,7 +34,7 @@ class InstamojoPrestaShopvalidationModuleFrontController extends ModuleFrontCont
 			
 			# prepare logger
 			$logger = new FileLogger(0); //0 == debug level, logDebug() won’t work without this.
-			if (version_compare(_PS_VERSION_, '1.7', '<')){
+			if (is_not_17()){
 				$logger->setFilename(_PS_ROOT_DIR_ . "/log/imojo.log");
 			}
 			else{
@@ -104,16 +109,21 @@ class InstamojoPrestaShopvalidationModuleFrontController extends ModuleFrontCont
 		
 		$temp_data = array(
 			'total' => $this->context->cart->getOrderTotal(true, Cart::BOTH),
-			'this_path' => $this->module->getPathUri(),//keep for retro compat
+			'this_path' => $this->module->getPathUri(), //keep for retro compat
 			'checkout_label' => Configuration::get('instamojo_checkout_label'),
 			'this_path_instamojo' => $this->module->getPathUri(),
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->module->name.'/',
 		);
-		$this->template_data = array_merge($this->template_data,$temp_data);
+		$this->template_data = array_merge($this->template_data, $temp_data);
 		$this->context->smarty->assign($this->template_data);
 		$this->display_column_left = false;
 		$this->display_column_right = false;
-		$this->setTemplate('validation.tpl');
+		if(is_not_17()){
+			$this->setTemplate('validation_old.tpl');
+		}
+		else{
+			$this->setTemplate('module:InstamojoPrestaShop/views/templates/front/validation_new.tpl');
+		}
 		parent::initContent();
 	}
 }
