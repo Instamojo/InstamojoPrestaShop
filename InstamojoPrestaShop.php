@@ -65,7 +65,7 @@ class InstamojoPrestaShop extends PaymentModule
 		$this->smarty->assign(array(
 			'this_path' => $this->_path, //keep for retro compat
 			'this_path_instamojo' => $this->_path,
-			'checkout_label' => $this->l((Configuration::get('checkout_label')) ? Configuration::get('checkout_label'): "Pay using Instamojo"),
+			'checkout_label' => $this->l((Configuration::get('instamojo_checkout_label')) ? Configuration::get('instamojo_checkout_label'): "Pay using Instamojo"),
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/' . $this->name . '/'
 		));
 		
@@ -78,7 +78,7 @@ class InstamojoPrestaShop extends PaymentModule
 			return ;
 		
 		return array(
-			'cta_text' => $this->l((Configuration::get('checkout_label'))?Configuration::get('checkout_label'):"Pay using Instamojo"),
+			'cta_text' => $this->l((Configuration::get('instamojo_checkout_label'))?Configuration::get('instamojo_checkout_label'):"Pay using Instamojo"),
 			'logo' => Media::getMediaPath(dirname(__FILE__).'/instamojo.png'),
 			'action' => $this->context->link->getModuleLink($this->name, 'validation', array('confirm' => true), true)
 		); 
